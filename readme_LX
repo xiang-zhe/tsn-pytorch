@@ -1,0 +1,29 @@
+TSN pytouch
+    python main.py hmdb51 RGB /home/ssiwo/LX/tsn-pytorch/data/train_val_txt/hmdb51_rgb_train_split_1.txt /home/ssiwo/LX/tsn-pytorch/data/train_val_txt/hmdb51_rgb_val_split_1.txt \
+   --arch BNInception --num_segments 3 \
+   --gd 20 --lr 0.001 --lr_steps 30 60 --epochs 80 \
+   -b 128 -j 8 --dropout 0.8 \
+   --snapshot_pref ucf101_bninception_
+
+    将数据移除docker，修改生成的文件的路径
+    source venv/bin/activate
+    pytouch的安装，pypi没有库需使用：
+        pip3 install http://download.pytorch.org/whl/cu75/torch-0.2.0.post3-cp35-cp35m-manylinux1_x86_64.whl 
+        pip3 install torchvision
+        0.3版本：pip install http://download.pytorch.org/whl/cu90/torch-0.3.1-cp35-cp35m-linux_x86_64.whl
+        或者：conda install pytorch torchvision -c pytorch
+
+    python main.py hmdb51 RGB /home/ubuntu/tsn-pytorch/data/train_val_txt/hmdb51_rgb_train_split_1.txt /home/ubuntu/tsn-pytorch/data/train_val_txt/hmdb51_rgb_val_split_1.txt \
+   --arch BNInception --num_segments 3 \
+   --gd 20 --lr 0.001 --lr_steps 30 60 --epochs 80 \
+   -b 128 -j 8 --dropout 0.8 \
+   --snapshot_pref ucf101_bninception_
+
+    报错：
+        size mismatch for inception_5b_pool_proj_bn.bias: copying a param of torch.Size([128]) from checkpoint, where the shape is torch.Size([1, 128]) in current model.
+        原因：pytorch0.4版本和0.3读取模型方式不一样了，换成0.3.1即可
+    报错：
+        what():  cuda runtime error (59) : device-side assert triggered at /pytorch/torch/lib/THC/generic/THCStorage.c:184
+        原因：
+        类别数量和指定的不符
+        把hmdb51的类别修改为52类
